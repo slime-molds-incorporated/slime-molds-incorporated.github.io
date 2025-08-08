@@ -1,5 +1,4 @@
 import JSZip from 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm'
-import { saveAs } from 'https://cdn.jsdelivr.net/npm/file-saver@2.0.5/+esm'
 import piexif from 'https://cdn.jsdelivr.net/npm/piexifjs@1.0.6/+esm'
 
 const fileInput = document.getElementById('file-input')
