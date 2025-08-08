@@ -88,9 +88,31 @@
   </div>
 
   <div id="right">
-    <h3>2. Assign Year</h3>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <h3 style="margin: 0;">2. Assign Year</h3>
+      <button id="toggle-instructions-btn" style="font-size: 0.8em; padding: 2px 6px; cursor: pointer;">See Instructions</button>
+    </div>
+    <p id="instructions" style="display: none; margin-top: 8px; font-size: 0.9em; line-height: 1.3; color: #333;">
+      Once you've selected photos by left click in the left pane, left click a year to assign them to it.  Those photos will then
+      disappear from the left pane, which by default displays only photos with no assigned year.  Right click a year to see the photos
+      assigned to it and enter "unassign" mode.  In this mode, left clicking photos will unassign them from the year.  Right click 
+      year tile again to go back to assign mode.  The photos you selected in unassign mode will once again be displayed in the unassigned
+      photos pool and can be assigned to a new year.
+    </p>
     <div id="year-grid" class="year-grid"></div>
-    <button id="export-btn">Export ZIP with Corrected Metadata</button>
+    <div id="tagging-container" style="margin-top: 10px;">
+      <label for="tag-select">Tags:</label>
+      <div id="tag-select" style="border: 1px solid gray; padding: 5px; max-height: 150px; overflow-y: auto;"></div>
+      <input type="text" id="new-tag-input" placeholder="Add new tag" style="width: 100%; margin-top: 5px;" />
+      <button id="add-tag-btn" style="width: 100%; margin-top: 5px;">Add Tag</button>
+    </div>
+    <button id="export-btn">Export Metadata</button>
+    <div style="position: fixed; bottom: 10px; left: 10px; right: 10px; background: #eee; padding: 10px; border-top: 1px solid #ccc; display: flex; align-items: center; gap: 10px;">
+      <button id="load-metadata-btn">Load Existing Metadata - Warning!  Replaces the work you've done in the browser with that in the file you upload.</button>
+      <input type="file" id="load-metadata-input" accept=".csv" style="display:none" />
+      <span id="load-status" style="font-size: 14px; color: green;"></span>
+    </div>
+    
   </div>
 
   <!-- Main JS app -->
