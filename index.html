@@ -88,8 +88,12 @@
   </div>
 
   <div id="right">
-    <h3>2. Assign Year</h3>
-    <p>Once you've selected photos by left click in the left pane, left click a year to assign them to it.  Those photos will then
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <h3 style="margin: 0;">2. Assign Year</h3>
+      <button id="toggle-instructions-btn" style="font-size: 0.8em; padding: 2px 6px; cursor: pointer;">See Instructions</button>
+    </div>
+    <p id="instructions" style="display: none; margin-top: 8px; font-size: 0.9em; line-height: 1.3; color: #333;">
+      Once you've selected photos by left click in the left pane, left click a year to assign them to it.  Those photos will then
       disappear from the left pane, which by default displays only photos with no assigned year.  Right click a year to see the photos
       assigned to it and enter "unassign" mode.  In this mode, left clicking photos will unassign them from the year.  Right click 
       year tile again to go back to assign mode.  The photos you selected in unassign mode will once again be displayed in the unassigned

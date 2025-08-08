@@ -2,6 +2,10 @@ import JSZip from 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm'
 import piexif from 'https://cdn.jsdelivr.net/npm/piexifjs@1.0.6/+esm'
 
 const MAX_PREVIEW_SIZE = 200;
+let allTags = [];
+let photos = []
+const yearNameIndices = {}
+let filteredYear = null; // null means showing unassigned photos
 
 const fileInput = document.getElementById('file-input')
 const sizeSlider = document.getElementById('size-slider');
@@ -16,13 +20,19 @@ const loadMetadataBtn = document.getElementById('load-metadata-btn');
 const loadMetadataInput = document.getElementById('load-metadata-input');
 const loadStatus = document.getElementById('load-status');
 
-let allTags = [];
+const toggleInstructionsBtn = document.getElementById('toggle-instructions-btn');
+const instructionsPara = document.getElementById('instructions');
 
-let photos = []
-const yearNameIndices = {}
-
-let filteredYear = null; // null means showing unassigned photos
-
+toggleInstructionsBtn.addEventListener('click', () => {
+  const visible = instructionsPara.style.display === 'block';
+  if (visible) {
+    instructionsPara.style.display = 'none';
+    toggleInstructionsBtn.textContent = 'See Instructions';
+  } else {
+    instructionsPara.style.display = 'block';
+    toggleInstructionsBtn.textContent = 'Hide Instructions';
+  }
+});
 
 
 loadMetadataBtn.addEventListener('click', () => {
