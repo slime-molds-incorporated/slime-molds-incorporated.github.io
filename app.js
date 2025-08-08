@@ -21,6 +21,9 @@ let allTags = [];
 let photos = []
 const yearNameIndices = {}
 
+let filteredYear = null; // null means showing unassigned photos
+
+
 
 loadMetadataBtn.addEventListener('click', () => {
   loadMetadataInput.value = null; // reset file input
@@ -234,18 +237,28 @@ function renderPhotoTile(photo, index) {
   const checkmark = document.createElement('div')
   checkmark.className = 'checkmark'
   checkmark.textContent = '✓'
-  checkmark.style.display = 'none'
-  tile.appendChild(checkmark)
+  checkmark.style.display = photo.selected ? 'block' : 'none';
+  tile.appendChild(checkmark);
 
-  tile.addEventListener('click', () => {
-    photo.selected = !photo.selected
-    selectionChanged();
-    tile.classList.toggle('selected', photo.selected)
-    checkmark.style.display = photo.selected ? 'block' : 'none'
-  })
+  if (filteredYear === null) {
+    // Normal selection mode: toggle selected on left-click
+    tile.addEventListener('click', () => {
+      photo.selected = !photo.selected;
+      tile.classList.toggle('selected', photo.selected);
+      checkmark.style.display = photo.selected ? 'block' : 'none';
+      selectionChanged();
+    });
+  } else {
+    // Filter mode: left-click unassigns year
+    tile.addEventListener('click', () => {
+      photo.assignedYear = null;
+      refreshPhotoGrid();
+      selectionChanged();
+    });
+  }
 
-  tile.dataset.index = index
-  photoGrid.appendChild(tile)
+  tile.dataset.index = index;
+  photoGrid.appendChild(tile);
 }
 
 function renderYearTiles() {
@@ -253,10 +266,38 @@ function renderYearTiles() {
     const tile = document.createElement('div')
     tile.className = 'year-tile'
     tile.textContent = year
-    tile.addEventListener('click', () => assignYear(year))
+    tile.addEventListener('click', () => {
+      if (filteredYear === null) {
+        assignYear(year);
+      }
+    });
+    tile.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      if (filteredYear === year) {
+        // Disable filter
+        filteredYear = null;
+      } else {
+        filteredYear = year;
+      }
+      updateYearTileStyles();
+      refreshPhotoGrid();
+    });
     yearGrid.appendChild(tile)
   }
 }
+
+function updateYearTileStyles() {
+  document.querySelectorAll('.year-tile').forEach(tile => {
+    if (+tile.textContent === filteredYear) {
+      tile.style.backgroundColor = 'black';
+      tile.style.color = 'white';
+    } else {
+      tile.style.backgroundColor = '';
+      tile.style.color = '';
+    }
+  });
+}
+
 
 function assignYear(year) {
   photos.forEach(photo => {
@@ -269,13 +310,26 @@ function assignYear(year) {
 }
 
 function refreshPhotoGrid() {
-  photoGrid.innerHTML = ''
-  photos.forEach((photo, index) => {
-    if (!photo.assignedYear) {
-      renderPhotoTile(photo, index)
-    }
-  })
+  photoGrid.innerHTML = '';
+
+  let visiblePhotos = [];
+  if (filteredYear === null) {
+    visiblePhotos = photos.filter(p => !p.assignedYear);
+  } else {
+    visiblePhotos = photos.filter(p => p.assignedYear === filteredYear);
+  }
+
+  visiblePhotos.forEach((photo, index) => renderPhotoTile(photo, index));
 }
+
+photoGrid.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  if (filteredYear !== null) {
+    filteredYear = null;
+    updateYearTileStyles();
+    refreshPhotoGrid();
+  }
+});
 
 exportBtn.addEventListener('click', async () => {
   const assignedPhotos = photos.filter(p => p.assignedYear);
