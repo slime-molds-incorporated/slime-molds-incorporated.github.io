@@ -20,8 +20,12 @@ Label photos with their year and with arbitrary tags.  (The photos will never le
 
 5) Export the metadata you've created to save your work.
 
+![Step 5 GIF](docs/5.gif)
 
 6) To resume work in another session or after adding more photos to your master folder, upload the metadata file you created.
 
+![Step 6 GIF](docs/6.gif)
 
-7) Finally, to apply the metadata to the images, hand the zip folder of all images and the metadata file to a programmer.  
+7) Finally after exporting your final version of the metadata file, hand the zip folder of all images and the metadata file to a programmer.  They'll apply the metadata to the the images and hand the updated images back.
+
+![Step 7 GIF](docs/7.gif)
