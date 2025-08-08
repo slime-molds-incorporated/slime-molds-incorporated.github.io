@@ -21,8 +21,11 @@ function getNextIndexForYear(obj, year) {
     }
 }
 
+let currentSize = sizeSlider.value;
+
 sizeSlider.addEventListener('input', () => {
-  const size = sizeSlider.value + 'px';
+  currentSize = sizeSlider.value;
+  const size = currentSize + 'px';
   document.querySelectorAll('.photo-tile').forEach(tile => {
     tile.style.width = size;
     tile.style.height = size;
@@ -55,6 +58,8 @@ function handleFiles(event) {
 function renderPhotoTile(photo, index) {
   const tile = document.createElement('div')
   tile.className = 'photo-tile'
+  tile.style.width = currentSize + 'px'
+  tile.style.height = currentSize + 'px'
   tile.innerHTML = `<img src="${photo.originalDataURL}" style="width: 100%; height: 100%; object-fit: cover;">`
 
   const checkmark = document.createElement('div')
