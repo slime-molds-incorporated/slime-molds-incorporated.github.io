@@ -71,7 +71,13 @@
 </head>
 <body>
   <div id="left">
-    <h3>1. Select Folder of Photos</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">1. Select Photos</h3>
+        <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+            Photo Display Size
+            <input type="range" id="size-slider" min="50" max="400" value="100" />
+        </label>
+    </div>
     <input type="file" id="file-input" multiple webkitdirectory />
     <div id="photo-grid" class="photo-grid"></div>
   </div>

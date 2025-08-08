@@ -2,9 +2,11 @@ import JSZip from 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm'
 import piexif from 'https://cdn.jsdelivr.net/npm/piexifjs@1.0.6/+esm'
 
 const fileInput = document.getElementById('file-input')
+const sizeSlider = document.getElementById('size-slider');
 const photoGrid = document.getElementById('photo-grid')
 const yearGrid = document.getElementById('year-grid')
 const exportBtn = document.getElementById('export-btn')
+
 
 let photos = []
 const yearNameIndices = {}
@@ -18,6 +20,14 @@ function getNextIndexForYear(obj, year) {
         return obj[year];
     }
 }
+
+sizeSlider.addEventListener('input', () => {
+  const size = sizeSlider.value + 'px';
+  document.querySelectorAll('.photo-tile').forEach(tile => {
+    tile.style.width = size;
+    tile.style.height = size;
+  });
+});
 
 fileInput.addEventListener('change', handleFiles)
 
