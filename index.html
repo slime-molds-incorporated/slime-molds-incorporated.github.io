@@ -90,7 +90,19 @@
   <div id="right">
     <h3>2. Assign Year</h3>
     <div id="year-grid" class="year-grid"></div>
+    <div id="tagging-container" style="margin-top: 10px;">
+      <label for="tag-select">Tags:</label>
+      <div id="tag-select" style="border: 1px solid gray; padding: 5px; max-height: 150px; overflow-y: auto;"></div>
+      <input type="text" id="new-tag-input" placeholder="Add new tag" style="width: 100%; margin-top: 5px;" />
+      <button id="add-tag-btn" style="width: 100%; margin-top: 5px;">Add Tag</button>
+    </div>
     <button id="export-btn">Export Metadata</button>
+    <div style="position: fixed; bottom: 10px; left: 10px; right: 10px; background: #eee; padding: 10px; border-top: 1px solid #ccc; display: flex; align-items: center; gap: 10px;">
+      <button id="load-metadata-btn">Load Existing Metadata - Warning!  Replaces the work you've done in the browser with that in the file you upload.</button>
+      <input type="file" id="load-metadata-input" accept=".csv" style="display:none" />
+      <span id="load-status" style="font-size: 14px; color: green;"></span>
+    </div>
+    
   </div>
 
   <!-- Main JS app -->
