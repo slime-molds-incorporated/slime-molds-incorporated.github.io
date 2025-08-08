@@ -6,7 +6,7 @@ const sizeSlider = document.getElementById('size-slider');
 const photoGrid = document.getElementById('photo-grid')
 const yearGrid = document.getElementById('year-grid')
 const exportBtn = document.getElementById('export-btn')
-
+const MAX_PREVIEW_SIZE = 100;
 
 let photos = []
 const yearNameIndices = {}
@@ -34,25 +34,44 @@ sizeSlider.addEventListener('input', () => {
 
 fileInput.addEventListener('change', handleFiles)
 
-function handleFiles(event) {
-  photos = []
-  photoGrid.innerHTML = ''
-  const files = Array.from(event.target.files).filter(file => file.type.startsWith('image/'))
-  files.forEach((file, index) => {
-    const reader = new FileReader()
-    reader.onload = e => {
-      const photo = {
-        file,
-        name: file.name,
-        originalDataURL: e.target.result,
-        assignedYear: null,
-        selected: false
-      }
-      photos.push(photo)
-      renderPhotoTile(photo, index)
-    }
-    reader.readAsDataURL(file)
-  })
+function downsampleImage(file, maxSize = MAX_PREVIEW_SIZE) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+      const width = Math.round(img.width * scale);
+      const height = Math.round(img.height * scale);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        resolve({ url, blob });
+      }, 'image/jpeg', 0.75);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+async function handleFiles(event) {
+  photos = [];
+  photoGrid.innerHTML = '';
+  const files = Array.from(event.target.files).filter(file => file.type.startsWith('image/'));
+  for (const file of files) {
+    const { url: previewURL } = await downsampleImage(file, MAX_PREVIEW_SIZE);
+    photos.push({
+      file,
+      name: file.name,
+      previewURL,
+      assignedYear: null,
+      selected: false
+    });
+  }
+  photos.forEach((photo, index) => renderPhotoTile(photo, index));
 }
 
 function renderPhotoTile(photo, index) {
@@ -60,7 +79,7 @@ function renderPhotoTile(photo, index) {
   tile.className = 'photo-tile'
   tile.style.width = currentSize + 'px'
   tile.style.height = currentSize + 'px'
-  tile.innerHTML = `<img src="${photo.originalDataURL}" style="width: 100%; height: 100%; object-fit: cover;">`
+  tile.innerHTML = `<img src="${photo.previewURL}" style="width: 100%; height: 100%; object-fit: cover;">`
 
   const checkmark = document.createElement('div')
   checkmark.className = 'checkmark'
