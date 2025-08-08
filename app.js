@@ -7,6 +7,17 @@ const yearGrid = document.getElementById('year-grid')
 const exportBtn = document.getElementById('export-btn')
 
 let photos = []
+const yearNameIndices = {}
+
+function getNextIndexForYear(obj, year) {
+    if (!(year in yearNameIndices)) {
+        obj[year] = 0;
+        return 0;
+    } else {
+        obj[year]++;
+        return obj[year];
+    }
+}
 
 fileInput.addEventListener('change', handleFiles)
 
@@ -101,6 +112,7 @@ exportBtn.addEventListener('click', async () => {
       exifObj = { '0th': {}, Exif: {}, GPS: {}, '1st': {}, thumbnail: null }
     }
 
+
     const formattedDate = `${photo.assignedYear}:01:01 00:00:00`
     exifObj['0th'][piexif.ImageIFD.DateTime] = formattedDate
     exifObj.Exif[piexif.ExifIFD.DateTimeOriginal] = formattedDate
@@ -110,7 +122,10 @@ exportBtn.addEventListener('click', async () => {
     const updatedDataURL = piexif.insert(exifBytes, dataURL)
     const updatedBlob = dataURLtoBlob(updatedDataURL)
 
-    zip.file(photo.name, updatedBlob)
+    const uniqueId = getNextIndexForYear(yearNameIndices, photo.assignedYear)
+    const newName = `${photo.assignedYear}__${uniqueId}.jpg`
+
+    zip.file(newName, updatedBlob)
   }
 
   const content = await zip.generateAsync({ type: 'blob' })
