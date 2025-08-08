@@ -122,8 +122,10 @@ exportBtn.addEventListener('click', async () => {
     const updatedDataURL = piexif.insert(exifBytes, dataURL)
     const updatedBlob = dataURLtoBlob(updatedDataURL)
 
-    const uniqueId = getNextIndexForYear(yearNameIndices, photo.assignedYear)
-    const newName = `${photo.assignedYear}__${uniqueId}.jpg`
+    // const uniqueId = getNextIndexForYear(yearNameIndices, photo.assignedYear)
+    const randomHash = [...Array(10)].map(() => Math.random().toString(36)[2]).join('');
+    const newName = `${photo.assignedYear}__${randomHash}.jpg`
+
 
     zip.file(newName, updatedBlob)
   }
