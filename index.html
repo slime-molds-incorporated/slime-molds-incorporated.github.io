@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Photo Metadata Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- External Styles -->
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+    #left, #right {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    h3 {
+      margin-top: 0;
+    }
+    .photo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .photo-tile {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .photo-tile.selected {
+      border: 2px solid blue;
+    }
+    .year-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .year-tile {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid gray;
+      cursor: pointer;
+      user-select: none;
+    }
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: white;
+      padding: 2px 5px;
+      font-size: 10px;
+    }
+    #export-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="left">
+    <h3>1. Select Folder of Photos</h3>
+    <input type="file" id="file-input" multiple webkitdirectory />
+    <div id="photo-grid" class="photo-grid"></div>
+  </div>
+
+  <div id="right">
+    <h3>2. Assign Year</h3>
+    <div id="year-grid" class="year-grid"></div>
+    <button id="export-btn">Export ZIP with Corrected Metadata</button>
+  </div>
+
+  <!-- Main JS app -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
