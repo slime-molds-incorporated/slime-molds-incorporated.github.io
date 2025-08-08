@@ -127,45 +127,26 @@ function refreshPhotoGrid() {
 }
 
 exportBtn.addEventListener('click', async () => {
-  const zip = new JSZip()
-  const assignedPhotos = photos.filter(p => p.assignedYear)
-
-  for (const photo of assignedPhotos) {
-    const arrayBuffer = await photo.file.arrayBuffer()
-    const dataURL = await fileToDataURL(photo.file)
-    const binaryStr = atob(dataURL.split(',')[1])
-    const binary = new Uint8Array(binaryStr.length)
-    for (let i = 0; i < binaryStr.length; i++) {
-      binary[i] = binaryStr.charCodeAt(i)
-    }
-
-    let exifObj = {}
-    try {
-      exifObj = piexif.load(binaryStr)
-    } catch (e) {
-      exifObj = { '0th': {}, Exif: {}, GPS: {}, '1st': {}, thumbnail: null }
-    }
-
-
-    const formattedDate = `${photo.assignedYear}:01:01 00:00:00`
-    exifObj['0th'][piexif.ImageIFD.DateTime] = formattedDate
-    exifObj.Exif[piexif.ExifIFD.DateTimeOriginal] = formattedDate
-    exifObj.Exif[piexif.ExifIFD.DateTimeDigitized] = formattedDate
-    const exifBytes = piexif.dump(exifObj)
-
-    const updatedDataURL = piexif.insert(exifBytes, dataURL)
-    const updatedBlob = dataURLtoBlob(updatedDataURL)
-
-    // const uniqueId = getNextIndexForYear(yearNameIndices, photo.assignedYear)
-    const randomHash = [...Array(10)].map(() => Math.random().toString(36)[2]).join('');
-    const newName = `${photo.assignedYear}__${randomHash}.jpg`
-
-
-    zip.file(newName, updatedBlob)
+  const assignedPhotos = photos.filter(p => p.assignedYear);
+  if (assignedPhotos.length === 0) {
+    alert('No photos assigned yet.');
+    return;
   }
 
-  const content = await zip.generateAsync({ type: 'blob' })
-  saveAs(content, 'corrected_photos.zip')
+  // CSV header
+  let csvContent = 'original_filename,new_filename,new_date_taken\n';
+
+  assignedPhotos.forEach(photo => {
+    const dateStr = `${photo.assignedYear}:01:01 00:00:00`; // Exif date format
+    // Generate new filename with random 10 char hash
+    const randomHash = [...Array(10)].map(() => Math.random().toString(36)[2]).join('');
+    const newName = `${photo.assignedYear}-01-01__${randomHash}.jpg`;
+    csvContent += `${photo.name},${newName},${dateStr}\n`;
+  });
+
+  // Create blob and trigger download
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  saveAs(blob, 'photo_metadata_map.csv');
 })
 
 function fileToDataURL(file) {
