@@ -103,8 +103,10 @@ function importMetadataCSV(csvText) {
     if (meta) {
       // Overwrite metadata (except pixel data / previewURL)
       if (meta.newFilename) photo.newName = meta.newFilename;
-      if (meta.newDate) photo.assignedYear = meta.newDate.split(':')[0]; // year only from "YYYY:MM:DD..."
+      if (meta.newDate) photo.assignedYear = parseInt(meta.newDate.split(':')[0]); // year only from "YYYY:MM:DD..."
       photo.tags = meta.tags || [];
+
+      console.log(photo);
 
       // Collect tags globally
       meta.tags.forEach(tag => {
@@ -118,6 +120,10 @@ function importMetadataCSV(csvText) {
   // Re-render UI to reflect changes
   refreshPhotoGrid();
   selectionChanged();
+
+  filteredYear = null;
+  updateYearTileStyles();
+  refreshPhotoGrid();
 }
 
 
