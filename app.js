@@ -278,7 +278,9 @@ function renderPhotoTile(photo, index) {
 }
 
 function renderYearTiles() {
-  for (let year = 1939; year <= 2025; year++) {
+  const years = [1925, ...Array.from({length: 2025 - 1939 + 1}, (_, i) => 1939 + i)];
+  // for (let year = 1939; year <= 2025; year++) {
+  for (const year of years) {
     const tile = document.createElement('div')
     tile.className = 'year-tile'
     tile.textContent = year
