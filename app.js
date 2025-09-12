@@ -176,9 +176,9 @@ function downsampleImage(file, maxSize = MAX_PREVIEW_SIZE) {
 async function handleFiles(event) {
   photos = [];
   photoGrid.innerHTML = '';
-  const files = Array.from(event.target.files).filter(file => file.type.startsWith('image/'));
+  const files = Array.from(event.target.files).filter(file => file.type.startsWith('image/') && (!file.name.startsWith('.') && !file.name.startsWith('._')));
   for (const file of files) {
-    if (!file.name.startsWith('.') && !file.name.startsWith('._')) {
+    // if (!file.name.startsWith('.') && !file.name.startsWith('._')) {
       const { url: previewURL } = await downsampleImage(file, MAX_PREVIEW_SIZE);
       photos.push({
         file,
@@ -187,7 +187,7 @@ async function handleFiles(event) {
         assignedYear: null,
         selected: false
       });
-    }
+    // }
   }
   photos.forEach((photo, index) => renderPhotoTile(photo, index));
 }
