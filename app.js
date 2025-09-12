@@ -178,14 +178,16 @@ async function handleFiles(event) {
   photoGrid.innerHTML = '';
   const files = Array.from(event.target.files).filter(file => file.type.startsWith('image/'));
   for (const file of files) {
-    const { url: previewURL } = await downsampleImage(file, MAX_PREVIEW_SIZE);
-    photos.push({
-      file,
-      name: file.name,
-      previewURL,
-      assignedYear: null,
-      selected: false
-    });
+    if (!file.name.startsWith('.') && !file.name.startsWith('._')) {
+      const { url: previewURL } = await downsampleImage(file, MAX_PREVIEW_SIZE);
+      photos.push({
+        file,
+        name: file.name,
+        previewURL,
+        assignedYear: null,
+        selected: false
+      });
+    }
   }
   photos.forEach((photo, index) => renderPhotoTile(photo, index));
 }
